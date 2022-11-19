@@ -7,6 +7,7 @@ const app = express();
 const  cors = require('cors');
 
 const userRoutes = require('./routes/user')
+const expenseRoutes = require('./routes/expense')
 
 const dotnev = require('dotenv');
 dotnev.config();
@@ -21,13 +22,14 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/user', userRoutes)
+app.use('/expense', expenseRoutes)
 
 
-sequelize.sync({force:true})
-// sequelize.sync()
+// sequelize.sync({force:true})
+sequelize.sync()
 .then(()=>{
    
     app.listen(3000);
 })
 .catch(err=>{
-    console.log("ttgg"+err)})
+    console.log(err)})

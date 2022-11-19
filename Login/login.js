@@ -11,6 +11,7 @@ async function login(e)
 
         const respone = await axios.post('http://localhost:3000/user/login', loginDetails)
         alert(respone.data.message)
+        window.location.href = "../ExpenseTracker/index.html";
     }
     catch (err) 
     {
