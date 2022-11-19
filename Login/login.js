@@ -14,7 +14,7 @@ async function login(e)
     }
     catch (err) 
     {
-        console.log(JSON.stringify(error))
+        console.log(JSON.stringify(err))
         document.body.innerHTML += `<div style="color:red;">${err.message}<div>`;
     }
 }
