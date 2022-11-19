@@ -4,11 +4,11 @@ async function signup(e)
     {
         e.preventDefault();
         const signupDetails = {
-            name: e.target.name,
-            email: e.target.email,
-            password: e.target.password
+            name: e.target.name.value,
+            email: e.target.email.value,
+            password: e.target.password.value
         }
-        console.log(signupDetails);
+        console.log(signupDetails.email);
 
         const respone = await axios.post('http://localhost:3000/user/signup', signupDetails)
         if(respone.status == 201)
