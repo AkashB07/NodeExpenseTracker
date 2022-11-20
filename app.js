@@ -1,19 +1,25 @@
 const express = require('express');
 
+const sequelize=require('./util/database')
+
+const Expense = require('./models/expenses');
+const User = require('./models/users');
+
 const bodyParser = require('body-parser');
 
 const app = express();
+
+const dotnev = require('dotenv');
+dotnev.config();
+
 
 const  cors = require('cors');
 
 const userRoutes = require('./routes/user')
 const expenseRoutes = require('./routes/expense')
 
-const dotnev = require('dotenv');
-dotnev.config();
-
-const sequelize=require('./util/database')
-
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 app.use(cors())
 
