@@ -1,5 +1,6 @@
 const Razorpay = require('razorpay');
-const Order = require('../models/orders')
+const Order = require('../models/orders');
+const User = require('../models/users');
 
 
 const purchasepremium =async (req, res) => {
@@ -47,7 +48,18 @@ const purchasepremium =async (req, res) => {
     }
 }
 
+const getAllUser = (req,res,next)=>{
+    User.findAll()
+    .then(users=>{
+        return res.status(200).json({users,success:true})
+    })
+    .catch(err=>{
+            console.log(err);
+    })
+}
+
 module.exports = {
     purchasepremium,
-    updateTransactionStatus
+    updateTransactionStatus,
+    getAllUser
 }

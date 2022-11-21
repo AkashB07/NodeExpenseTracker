@@ -62,7 +62,7 @@ function showError(err){
 
 document.getElementById('rzp-button1').onclick = async function (e) {
     const response  = await axios.get('http://localhost:3000/purchase/premiummembership', { headers: {"Authorization" : token} });
-    console.log(response.data.key_id);
+    console.log(response);
     var options =
     {
      "key": response.data.key_id, // Enter the Key ID generated from the Dashboard
@@ -71,10 +71,10 @@ document.getElementById('rzp-button1').onclick = async function (e) {
      "prefill": {
        "name": "Test User",
        "email": "test.user@example.com",
-       "contact": "9863248535"
+       "contact": "7003442036"
      },
      "theme": {
-      "color": "#3399cc "
+      "color": "#3399cc"
      },
      // This handler function will handle the success payment
      "handler": function (response) {
@@ -82,14 +82,17 @@ document.getElementById('rzp-button1').onclick = async function (e) {
          axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
              order_id: options.order_id,
              payment_id: response.razorpay_payment_id,
-         }, { headers: {"Authorization" : token} }).then(() => {
+         }, { headers: {"Authorization" : token} })
+         .then(() => {
              alert('You are a Premium User Now')
-         }).catch(() => {
+                 document.body.classList.add('dark')
+         })
+         .catch(() => {
              alert('Something went wrong. Try Again!!!')
          })
      },
   };
-  var rzp1 = new Razorpay(options);
+  const rzp1 = new Razorpay(options);
   rzp1.open();
   e.preventDefault();
 
