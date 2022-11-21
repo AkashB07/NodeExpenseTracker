@@ -46,7 +46,6 @@ Forgotpassword.belongsTo(User);
 // sequelize.sync({force:true})
 sequelize.sync()
 .then(()=>{
-   
     app.listen(3000);
 })
 .catch(err=>{

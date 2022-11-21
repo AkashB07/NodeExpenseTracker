@@ -29,7 +29,6 @@ const forgotpassword = async (req, res) => {
             sgMail
             .send(msg)
             .then((response) => {
-
                 // console.log(response[0].statusCode)
                 // console.log(response[0].headers)
                 return res.status(response[0].statusCode).json({message: 'Link to reset password sent to your mail ', sucess: true})

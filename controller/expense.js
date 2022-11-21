@@ -50,7 +50,7 @@ const deleteexpense = async (req, res) => {
             return res.status(404).json({succese: false, message: "Expense does not belongs to User"});
         }
         return res.status(200).json({succese: true, message: "Deleted Successfully"});
-        
+ 
     } 
     catch (err) {
         return res.status(403).json({succese: false, message: "Failed"})
