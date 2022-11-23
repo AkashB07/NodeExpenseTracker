@@ -4,13 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LeaderBoard</title>
+    <link rel="stylesheet" type="text/css" href="leaderboard.css"/> 
+    <title>Document</title>
 </head>
 <body>
-    <ul id='listofusers'>
+    <div class="container">
 
-    </ul>
-    <script src='./leaderboard.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <h1 class="leaderboard">Leader Board</h1>
+        <div class="use_cont" id="use_cont">
+            
+            <div class="user_heading">
+                <p><b>Rank</b></p>
+                <p><b>User Name</b></p>
+                <p><b>Total expense</b></p>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./leaderBoard.js"></script>
 </body>
 </html>

@@ -1,5 +1,8 @@
 const token = localStorage.getItem('token');
 
+// const premium = await axios.get('http://localhost:3000/purchase/ispremium', { headers: {"Authorization" : token} });
+// console.log(premium.data.succese)
+
 async function addNewExpense(e){
     try {
         e.preventDefault();
@@ -24,6 +27,16 @@ window.addEventListener('DOMContentLoaded', async()=>{
         respone.data.expenses.forEach(expense => {
         addNewExpensetoUI(expense);
        });
+
+      
+       const downloaddata = await axios.get('http://localhost:3000/downloadlist/downloadlist', {headers: {"Authorization" : token}})
+       const data=downloaddata.data
+       const downloadlist_form=document.getElementById('downloadlist_form')
+       for(let i=0;i<data.length;i++){
+           downloadlist_form.innerHTML=downloadlist_form.innerHTML+` <li class="expense_header" >
+           Downloaded at - ${data[i].createdAt} <span>  -  </span> <a href=${data[i].url}>click here to download</a> 
+        </li>`
+       }       
     } 
     catch (err) {
         showError(err);
@@ -37,7 +50,10 @@ function addNewExpensetoUI(expense){
     <li id=${expenseElemId}>
     ${expense.expenseamount} - ${expense.description} - ${expense.category}  
     <button onclick='deleteExpense(event, ${expense.id})'>Delete Expense</button>
-    </li>`
+    </li>`;
+    const paginationNumber = document.getElementById('page');
+    const paginationList = document.getElementById('listOfExpenses');
+    paginationList.querySelectorAll('li');
 }
 
 async function deleteExpense(e, expenseid){
@@ -59,30 +75,55 @@ function showError(err){
     document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
 }
 
-
-function download(){
-    axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} })
-    .then((response) => {
-        
+async function download()
+{ 
+    try {
+        const response = await  axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} });
         if(response.status === 201){
             //the bcakend is essentially sending a download link
             //  which if we open in browser, the file would download
-            console.log('fileURL')
             var a = document.createElement("a");
             a.href = response.data.fileURL;
-            console.log('fileURL')
             a.download = 'myexpense.csv';
             a.click();
         } else {
             throw new Error(response.data.message)
-        }
-
-    })
-    .catch((err) => {
-        showError(err)
-    });
+        }   
+    } 
+    catch (error) {
+        showError(error)
+    }
 }
 
+// function download(){
+//     axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} })
+//     .then((response) => {
+        
+//         if(response.status === 201){
+//             //the bcakend is essentially sending a download link
+//             //  which if we open in browser, the file would download
+//             console.log('fileURL')
+//             var a = document.createElement("a");
+//             a.href = response.data.fileURL;
+//             console.log('fileURL')
+//             a.download = 'myexpense.csv';
+//             a.click();
+//         } else {
+//             throw new Error(response.data.message)
+//         }
+
+//     })
+//     .catch((err) => {
+//         showError(err)
+//     });
+// }
+function CreatePagination(totalPages){
+    const paginationContainer=document.getElementById('pagination')
+    for(let i=1;i<=totalPages;i++){
+        const a=`<a href="./home.html?page=${i}" >${i}</a>`
+        paginationContainer.innerHTML= paginationContainer.innerHTML+a
+    }
+}
 
 
 document.getElementById('rzp-button1').onclick = async function (e) {
@@ -91,7 +132,7 @@ document.getElementById('rzp-button1').onclick = async function (e) {
     var options =
     {
      "key": response.data.key_id, // Enter the Key ID generated from the Dashboard
-     "name": "YAV Technology",
+     "name": "AB Technology",
      "order_id": response.data.order.id, // For one time payment
      "prefill": {
        "name": "Akash",
@@ -108,6 +149,7 @@ document.getElementById('rzp-button1').onclick = async function (e) {
              order_id: options.order_id,
              payment_id: response.razorpay_payment_id,
          }, { headers: {"Authorization" : token} }).then(() => {
+            localStorage.setItem('membrship', 'true');
              alert('You are a Premium User Now')
          }).catch(() => {
              alert('Something went wrong. Try Again!!!')
