@@ -6,8 +6,8 @@ const User = require('../models/users');
 const purchasepremium =async (req, res) => {
     try {
         var rzp = new Razorpay({
-            key_id: 'rzp_test_iiQiiGcT7jmJlH',
-            key_secret: '0xR9cUcpI3Jqq8j7KcV9MWZC'
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
         })
         const amount = 2500;
 
@@ -43,12 +43,13 @@ const purchasepremium =async (req, res) => {
         })
     } catch (err) {
         console.log(err);
-        res.status(403).json({ errpr: err, message: 'Sometghing went wrong' })
+        res.status(403).json({ err: err, message: 'Sometghing went wrong' })
 
     }
 }
 
 const getAllUser = (req,res,next)=>{
+
     User.findAll()
     .then(users=>{
         return res.status(200).json({users,success:true})

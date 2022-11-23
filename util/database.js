@@ -7,5 +7,3 @@ const sequelize = new Sequelize('expense', 'root', 'root', {
 
 module.exports = sequelize;
 
-
-

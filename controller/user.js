@@ -1,4 +1,5 @@
 const User = require('../models/users');
+const Expense = require('../models/expenses');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -32,7 +33,7 @@ const signup = async (req, res) => {
 }
 
 function generateAccessToken(id, name){
-    return jwt.sign({userId: id, name: name}, 'securityKey522wsrhrrh5fa2fddrsh')
+    return jwt.sign({userId: id, name: name}, process.env.TOKEN_SECRET)
 }
 
 const login = async (req, res) => {
@@ -67,9 +68,35 @@ const login = async (req, res) => {
     }
 }
 
+const getAllUserWithExpense = async(req,res)=>{
+    if(!req.user.ispremiumuser){
+        return res.status(401).json({ success: false, message: 'User is not a premium User'})
+    }
+    User.findAll().then(async(users)=>{
+      var UserAndExpense=[]
+      var alldata={};
+      for(let i=0;i<users.length;i++){
+      await  Expense.findAll({where:{userId:users[i].id}}).then(expense=>{
+        var totalexpense=0;
+        for(let i=0;i<expense.length;i++){
+          totalexpense=totalexpense+expense[i].expenseamount
+        }
+          alldata={
+            ...users[i].dataValues,
+            totalexpense
+          }
+          console.log(alldata);
+        })
+        UserAndExpense.push(alldata)
+      }
+      res.json(UserAndExpense) 
+    })
+  }
+
 module.exports = {
     signup,
-    login
+    login,
+    getAllUserWithExpense
 }
 
 
