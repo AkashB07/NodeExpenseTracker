@@ -15,7 +15,8 @@ function isexpensevalid(string){
 
 const getExpense = async (req, res) => {
     try {
-        const expenses = await Expense.findAll({where: {userId: req.user.id}});
+        // const expenses = await Expense.findAll({where: {userId: req.user.id}});
+        const expenses = await req.user.getExpenses({limit:10, offset:0})
         return res.status(200).json({expenses, succese: true});   
     } 
     catch (err) {
@@ -86,7 +87,6 @@ const deleteexpense = async (req, res) => {
 
 const getExpenseById = (req,res)=>{
     const id=req.params.userId;
-    console.log(id)
 
     Expense.findAll({where:{userId:id}}).then(expense=>{
 
@@ -104,24 +104,29 @@ const getExpenseById = (req,res)=>{
 
 }
 
+const getUserDetails = async (req, res)=>{
+    try {
+        // const uid=req.params.userId;
+        // console.log(uid);
+        // let user = await User.findAll({where:{id:uid}})
+        // console.log(user.data)
+        // return res.status(200).json({user, succese: true});
+        let user = req.user.dataValues
+        // console.log(user)
+      res.status(200).json({user})
+    } 
+    catch (err) {
+        return res.status(400).json({succese: false, message: "Failed"})
+    }
+    
+}
+
+
 module.exports = {
     addexpense,
     getExpense,
     deleteexpense,
     downloadexpenses,
-    getExpenseById
+    getExpenseById,
+    getUserDetails
 }
-
-
-
-
-// const getExpense = async (req, res) => {
-//     try {
-//         const expenses = await Expense.findAll({where: {userId: req.user.id}});
-//         return res.status(200).json({expenses, succese: true});   
-//     } 
-//     catch (err) {
-//         return res.status(500).json({succese: false, error: err})
-//     }
-// }
-

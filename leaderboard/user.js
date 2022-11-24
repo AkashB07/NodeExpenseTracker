@@ -1,48 +1,69 @@
 const expenseForm=document.getElementById('expense_from')
 
-const expense_item_cont=document.getElementById('expense_item_cont')
+const btn = document.getElementById("btn");
+const nav = document.getElementById("nav");
+
+btn.addEventListener("click", () => {
+    nav.classList.toggle("active");
+    btn.classList.toggle("active");
+});
+
 const token= localStorage.getItem('token')
 let count=1;
-document.addEventListener('DOMContentLoaded',async()=>{
-    let paramString = window.location.href;
-    console.log(paramString.split('userid=')[1])
-    const id=paramString.split('userid=')[1]
 
-    const expense_item_cont=document.getElementById('expense_item_cont')
-    var body = document.getElementsByTagName("BODY")[0]; 
-    const expense=document.getElementById('expense')
-    const expense_from=document.getElementById('expense_from')
-    var tokenn= localStorage.getItem('token')
-    let premimum=false;
+window.addEventListener('DOMContentLoaded',async()=>{
+    try {
+        const user = await axios.get('http://localhost:3000/expense/getuser', {headers: {"Authorization" : token}})
+       const premium = user.data.user.ispremiumuser;
+       if(premium){
+        let premiumDiv = document.querySelector(".premium-feature")
 
+            premiumDiv.innerHTML = `
+            <li><a href="../leaderboard/leaderboard.html" >Leaderboard</a></li>
+            <li><a href="../Report/report.html">Report</a></li>
+            `
+
+            let paramString = window.location.href;
+            const id=paramString.split('userid=')[1]
+            const expense_item_cont=document.getElementById('expense_item_cont')
+            let data = await axios.get(`http://localhost:3000/expense/getexpensebyid/${id}`,{
+                headers:{"Authorization":token}})
+
+
+            const usernameCont=document.getElementById('username_show')
+            usernameCont.innerHTML=`<b class=>${data.data.name}</b>`
+            data=data.data.expense
+            for(let i=0;i<data.length;i++){
+                expense_item_cont.innerHTML=  expense_item_cont.innerHTML+` <div class="expense_item">
+                <p>${count}</p>
+                <p>${data[i].expenseamount}</p>
+                <p>${data[i].description}</p>
+                <p>${data[i].category}</p>
+                <p>${data[i].createdAt}</p>
+
+                </div>`
+                count++;
+            } 
+       }
+    } 
+    catch (err) {
+        showError('You are not a premium user '+err);
+    }
    
-   
-   
-
-    console.log('dom loadeed')
-    const token= localStorage.getItem('token')
-    await axios.get(`http://localhost:3000/expense/getexpensebyid/${id}`,{
-        headers:{"Authorization":token}
-    })
-    .then(data=>{
-
-        const usernameCont=document.getElementById('username_show')
-        usernameCont.innerHTML=`<b class=>${data.data.name}</b>`
-
-        console.log(data)
-        data=data.data.expense
-        for(let i=0;i<data.length;i++){
-            expense_item_cont.innerHTML=  expense_item_cont.innerHTML+` <div class="expense_item">
-            <p>${count}</p>
-            <p>${data[i].expenseamount}</p>
-            <p>${data[i].description}</p>
-            <p>${data[i].category}</p>
-            <p>${data[i].createdAt}</p>
-    
-        </div>`
-            count++;
-        }
-       
-
-    })
 })
+
+
+function showError(err){
+    document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
+}
+
+
+let logoutBtn = document.querySelector('#logout')
+
+logoutBtn.addEventListener('click', (e)=>{
+    localStorage.clear()
+    window.location.replace('../Login/login.html')
+})
+
+
+

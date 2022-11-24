@@ -9,13 +9,8 @@ body{
  
 }
 
-body.dark {
-    background-color: rgb(9, 9, 9);
-    color: blue;
-}
-
 h1{
-   color: rgb(76, 121, 117);
+   color: rgb(76, 121, 117);;
    text-align: center;
 }
 .container{
@@ -80,55 +75,5 @@ nav button{
 	color: white;
 	padding: 0;
 	cursor: pointer;
-}
-
-body.dark {
-    background-color: black;
-    color: blue;
-}
-
-.storename{
-    padding-top: 0px;
-    background-color: rgba(128, 106, 7, 0.743);
-    color: #000;
-    height: 200px;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-}
-.storename h1{
-    font-size:90px;
-    color:white;
-}
-
-.page{
-    background-color: rgba(0, 0, 0, 0.743);
-}
- .details{
-    padding-top: 5spx;
-    padding-bottom: 5px;
-    color: rgb(252, 252, 252);
-    display: flex;
-    justify-content:left;
-    height: 200px;
-    display: flex;
-}
-
-.pagination{
-    text-align: center;
-    margin-top: 2rem;
-}
-
-.pagination a{
-    background-color: #355674;
-    text-decoration: none;
-    color: #f2f6fd;
-    padding: 0.5rem;
-    border: 1px solid #3a8c57;
-    margin: 0 1rem;
-}
-
-.downloaded_expense_cont h3{
-    color: black;
 }
 

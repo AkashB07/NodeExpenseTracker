@@ -1,5 +1,13 @@
+const Expense = require('../models/expenses');
+const User = require('../models/users');
+const UserServices = require('../services/userservices');
+const S3Services  = require('../services/S3services');
 const DownloadList = require('../models/downloadlist')
-exports.getDownloadlist = async (req,res)=>{
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+
+const getDownloadlist = async (req,res)=>{
     try {
         // if(!req.user.ispremiumuser){
         //     return res.status(401).json({ success: false, message: 'User is not a premium User'})
@@ -11,4 +19,72 @@ exports.getDownloadlist = async (req,res)=>{
     catch (error) {
         return res.status(500).json({succese: false, error: err})
     }
+}
+
+const getDailyExpenses = (req, res, next)=>{
+    //console.log(req.user.id)
+    const today = new Date().setHours(0,0,0,0)
+    const now = new Date()
+
+    req.user.getExpenses({
+        where:{
+            createdAt:{
+                [Op.gt]: today,
+                [Op.lt]: now
+            }
+        }
+    })
+    .then(result=>{
+        //console.log(result)
+        res.json(result)
+    })
+    
+}
+
+const getWeeklyExpenses = (req, res, next)=>{
+    //console.log(req.user.id)
+    const todayDate = new Date().getDate()
+    const lastWeek  = new Date().setDate(todayDate-7)
+    const now = new Date()
+    
+    req.user.getExpenses({
+        where:{
+            createdAt:{
+                [Op.gt]: lastWeek,
+                [Op.lt]: now
+            }
+        }
+    })
+    .then(result=>{
+        //console.log(result)
+        res.json(result)
+    })
+    
+}
+
+const getMonthlyExpenses = (req, res, next)=>{
+    //console.log(req.user.id)
+    const month = new Date().getMonth()
+    const lastMonth  = new Date().setMonth(month-1)
+    const now = new Date()
+    
+    req.user.getExpenses({
+        where:{
+            createdAt:{
+                [Op.gt]: lastMonth,
+                [Op.lt]: now
+            }
+        }
+    })
+    .then(result=>{
+        //console.log(result)
+        res.json(result)
+    })
+}
+
+module.exports = {
+    getDownloadlist,
+    getDailyExpenses,
+    getWeeklyExpenses,
+    getMonthlyExpenses
 }

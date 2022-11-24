@@ -1,8 +1,5 @@
 const token = localStorage.getItem('token');
 
-// const premium = await axios.get('http://localhost:3000/purchase/ispremium', { headers: {"Authorization" : token} });
-// console.log(premium.data.succese)
-
 async function addNewExpense(e){
     try {
         e.preventDefault();
@@ -20,6 +17,13 @@ async function addNewExpense(e){
         showError(err);
     }
 }
+const btn = document.getElementById("btn");
+const nav = document.getElementById("nav");
+
+btn.addEventListener("click", () => {
+    nav.classList.toggle("active");
+    btn.classList.toggle("active");
+});
 
 window.addEventListener('DOMContentLoaded', async()=>{
     try {
@@ -28,15 +32,22 @@ window.addEventListener('DOMContentLoaded', async()=>{
         addNewExpensetoUI(expense);
        });
 
+       const user = await axios.get('http://localhost:3000/expense/getuser', {headers: {"Authorization" : token}})
+       const premium = user.data.user.ispremiumuser;
+       console.log(premium)
+       if(premium){
+        let premiumDiv = document.querySelector(".premium-feature")
+
+            premiumDiv.innerHTML = `
+            <li><a href="../leaderboard/leaderboard.html" >Leaderboard</a></li>
+            <li><a href="../Report/report.html">Report</a></li>
+            <li><button onclick="download()" id="downloadexpense">Download File</button></li>
+            `
+            document.body.classList.add('dark')
+
+       }
       
-       const downloaddata = await axios.get('http://localhost:3000/downloadlist/downloadlist', {headers: {"Authorization" : token}})
-       const data=downloaddata.data
-       const downloadlist_form=document.getElementById('downloadlist_form')
-       for(let i=0;i<data.length;i++){
-           downloadlist_form.innerHTML=downloadlist_form.innerHTML+` <li class="expense_header" >
-           Downloaded at - ${data[i].createdAt} <span>  -  </span> <a href=${data[i].url}>click here to download</a> 
-        </li>`
-       }       
+            
     } 
     catch (err) {
         showError(err);
@@ -95,28 +106,7 @@ async function download()
     }
 }
 
-// function download(){
-//     axios.get('http://localhost:3000/expense/download', { headers: {"Authorization" : token} })
-//     .then((response) => {
-        
-//         if(response.status === 201){
-//             //the bcakend is essentially sending a download link
-//             //  which if we open in browser, the file would download
-//             console.log('fileURL')
-//             var a = document.createElement("a");
-//             a.href = response.data.fileURL;
-//             console.log('fileURL')
-//             a.download = 'myexpense.csv';
-//             a.click();
-//         } else {
-//             throw new Error(response.data.message)
-//         }
 
-//     })
-//     .catch((err) => {
-//         showError(err)
-//     });
-// }
 function CreatePagination(totalPages){
     const paginationContainer=document.getElementById('pagination')
     for(let i=1;i<=totalPages;i++){
@@ -170,3 +160,11 @@ document.getElementById('rzp-button1').onclick = async function (e) {
   alert(response.error.metadata.payment_id);
  });
 }
+
+
+let logoutBtn = document.querySelector('#logout')
+
+logoutBtn.addEventListener('click', (e)=>{
+    localStorage.clear()
+    window.location.replace('../Login/login.html')
+})

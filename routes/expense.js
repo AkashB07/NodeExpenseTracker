@@ -10,6 +10,8 @@ router.post('/addexpense', userauthentication.authenticate ,expenseController.ad
 
 router.get('/getexpenses', userauthentication.authenticate ,expenseController.getExpense)
 
+router.get('/getuser', userauthentication.authenticate, expenseController.getUserDetails)
+
 router.delete('/deleteexpense/:expenseid', userauthentication.authenticate, expenseController.deleteexpense)
 
 router.get('/getexpensebyid/:userId',expenseController.getExpenseById)
