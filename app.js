@@ -1,4 +1,12 @@
+const path = require('path');
+const fs = require('fs')
+const dotnev = require('dotenv');
+dotnev.config();
+
 const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const  cors = require('cors');
 
 const sequelize=require('./util/database')
 
@@ -12,11 +20,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const dotnev = require('dotenv');
-dotnev.config();
-
-
-const  cors = require('cors');
 
 const userRoutes = require('./routes/user')
 const purchaseRoutes = require('./routes/purchase')
@@ -24,8 +27,12 @@ const expenseRoutes = require('./routes/expense')
 const resetPasswordRoutes = require('./routes/resetpassword')
 const downloadlistRoutes=require('./routes/downloadlist')
 
-
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'), {flags: 'a'}
+);
 app.use(cors())
+app.use(helmet())
+app.use(morgan('combined', {stream: accessLogStream}));
 
 // app.use(bodyParser.urlencoded({extended: false}))
 // app.use(bodyParser.json());
